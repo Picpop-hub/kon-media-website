@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="google-site-verification" content="9uO6RbSH67nhlXxZ9qa9gzF1QwApOrNmZiDVMbopqEk" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kon Media — King of None</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #080808;
+  --white: #f2f0eb;
+  --red: #e63223;
+  --red2: #c41e10;
+  --gray: #1a1a1a;
+  --gray2: #242424;
+  --muted: rgba(242,240,235,0.75);
+  --border: rgba(242,240,235,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 10px; height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(230,50,35,0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.12s ease;
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.35;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.5rem 3rem;
+  mix-blend-mode: normal;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--red); }
+
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--red);
+  color: var(--white);
+  padding: 9px 22px;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.nav-cta:hover { background: var(--red2); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(135deg, rgba(230,50,35,0.12) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 40%, rgba(8,8,8,0.95) 100%);
+  z-index: 0;
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(242,240,235,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,240,235,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 0;
+}
+
+.hero-number {
+  position: absolute;
+  top: 50%; right: 3rem;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(12rem, 22vw, 22rem);
+  color: rgba(230,50,35,0.06);
+  line-height: 1;
+  user-select: none;
+  z-index: 0;
+  letter-spacing: -0.02em;
+}
+
+.hero-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.5rem;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4.5rem, 12vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s ease 0.35s both;
+}
+
+.hero-title .outline {
+  -webkit-text-stroke: 2px var(--white);
+  color: transparent;
+}
+
+.hero-title .red { color: var(--red); }
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s ease 0.5s both;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s ease 0.65s both;
+}
+
+.btn-primary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  padding: 14px 32px; border-radius: 3px;
+  text-decoration: none; border: none; cursor: none;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-primary:hover { background: var(--red2); transform: translateY(-2px); }
+
+.btn-secondary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+  background: transparent; color: var(--white);
+  padding: 14px 32px; border-radius: 3px;
+  text-decoration: none; border: 1.5px solid rgba(242,240,235,0.2);
+  cursor: none; transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-secondary:hover { border-color: var(--white); }
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; right: 3rem;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  z-index: 1;
+  animation: fadeUp 0.8s ease 0.8s both;
+}
+
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--red), transparent);
+  animation: scrollLine 2s ease infinite;
+}
+
+.scroll-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); writing-mode: vertical-rl;
+}
+
+/* TICKER */
+.ticker {
+  background: var(--red);
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative; z-index: 2;
+}
+
+.ticker-inner {
+  display: inline-flex; gap: 0;
+  animation: ticker 20s linear infinite;
+}
+
+.ticker-item {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--white); padding: 0 2rem;
+}
+
+.ticker-dot {
+  color: rgba(255,255,255,0.4);
+  padding: 0 0.5rem;
+}
+
+/* SERVICES */
+.services {
+  padding: 8rem 3rem;
+  position: relative;
+}
+
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1; margin-bottom: 4rem;
+  letter-spacing: 0.02em;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.service-card {
+  background: var(--black);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover { background: var(--gray); }
+.service-card:hover::before { transform: scaleX(1); }
+
+.service-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  color: rgba(230,50,35,0.15);
+  line-height: 1;
+  margin-bottom: 1rem;
+  transition: color 0.3s;
+}
+
+.service-card:hover .service-num { color: rgba(230,50,35,0.3); }
+
+.service-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.service-desc {
+  font-size: 14px; font-weight: 300;
+  color: var(--muted); line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.service-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.stag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid var(--border);
+  color: var(--muted); padding: 4px 10px; border-radius: 2px;
+}
+
+/* WHO WE ARE */
+.about {
+  padding: 8rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  border-top: 1px solid var(--border);
+}
+
+.about-left .big-k {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(8rem, 18vw, 16rem);
+  color: rgba(230,50,35,0.08);
+  line-height: 0.85;
+  margin-bottom: -2rem;
+  display: block;
+}
+
+.about-right .section-title { margin-bottom: 1.5rem; }
+
+.about-body {
+  font-size: 16px; font-weight: 300;
+  color: rgba(242,240,235,0.82); line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.about-body strong { color: var(--white); font-weight: 500; }
+
+.stats-row {
+  display: flex; gap: 3rem; margin-top: 2.5rem;
+}
+
+.stat-item {}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem; color: var(--red); line-height: 1;
+}
+.stat-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); margin-top: 4px;
+}
+
+/* PROCESS */
+.process {
+  padding: 8rem 3rem;
+  border-top: 1px solid var(--border);
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0;
+  margin-top: 4rem;
+  border: 1px solid var(--border);
+}
+
+.process-step {
+  padding: 2.5rem;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.process-step:last-child { border-right: none; }
+
+.step-arrow {
+  position: absolute; top: 2.5rem; right: -12px;
+  width: 24px; height: 24px;
+  background: var(--red);
+  clip-path: polygon(0 0, 70% 50%, 0 100%);
+  z-index: 2;
+}
+
+.process-step:last-child .step-arrow { display: none; }
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; color: var(--red);
+  letter-spacing: 0.1em; margin-bottom: 1rem;
+}
+
+.step-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.2rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.step-desc {
+  font-size: 13px; font-weight: 300;
+  color: rgba(242,240,235,0.82); line-height: 1.7;
+}
+
+/* CONTACT */
+.contact {
+  padding: 8rem 3rem;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.contact-left .hero-title { font-size: clamp(3rem, 7vw, 7rem); margin-bottom: 1.5rem; }
+
+.contact-left p {
+  font-size: 16px; font-weight: 300;
+  color: var(--muted); line-height: 1.8; max-width: 420px;
+}
+
+.contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.field label {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+
+.field input, .field textarea, .field select {
+  width: 100%;
+  background: var(--gray);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px; font-weight: 300;
+  padding: 13px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--red);
+}
+
+.field input::placeholder, .field textarea::placeholder { color: rgba(242,240,235,0.2); }
+
+.field select option { background: var(--gray); }
+
+.submit-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  border: none; border-radius: 3px;
+  padding: 16px 32px; cursor: none;
+  transition: all 0.2s; width: 100%;
+  margin-top: 8px;
+}
+
+.submit-btn:hover { background: var(--red2); transform: translateY(-2px); }
+
+/* FOOTER */
+footer {
+  padding: 3rem;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.08em;
+  color: var(--white); text-decoration: none;
+}
+
+.footer-logo span { color: var(--red); }
+
+.footer-copy {
+  font-size: 12px; color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.08em;
+}
+
+.footer-links {
+  display: flex; gap: 2rem; list-style: none;
+}
+
+.footer-links a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--red); }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 1.25rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 0 1.5rem 3rem; }
+  .hero-number { display: none; }
+  .services, .process, .contact, .about { padding: 5rem 1.5rem; }
+  .about { grid-template-columns: 1fr; gap: 2rem; }
+  .about-left .big-k { font-size: 8rem; }
+  .contact { grid-template-columns: 1fr; gap: 3rem; }
+  .form-row { grid-template-columns: 1fr; }
+  footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+  .stats-row { gap: 2rem; }
+  .hero-scroll { display: none; }
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Kon Media",
+  "alternateName": "King of None Media",
+  "description": "Full-service creative production company based in Southern California. Video production, photography, brand content, livestreaming, podcast production, and brand strategy for companies that refuse to be boring.",
+  "url": "https://www.kingofnonemedia.com",
+  "areaServed": [
+    "Southern California", "Coachella Valley", "Palm Springs", "Los Angeles", "Inland Empire"
+  ],
+  "serviceType": [
+    "Video Production",
+    "Photography",
+    "Social Media Content",
+    "Brand Strategy",
+    "Livestreaming",
+    "Podcast Production"
+  ],
+  "knowsAbout": [
+    "Corporate Video Production",
+    "Brand Photography",
+    "Social Media Content Creation",
+    "Livestream Production",
+    "Podcast Production",
+    "Brand Strategy",
+    "Event Production"
+  ],
+  "slogan": "Content That Moves Brands"
+}
+</script>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">KON<span>.</span>MEDIA</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Work With Us</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-number">K</div>
+
+  <div class="hero-tag">// Content · Production · Strategy · Brand</div>
+  <h1 class="hero-title">
+    <span class="outline">CONTENT</span><br>
+    THAT <span class="red">MOVES</span><br>
+    <span class="outline">BRANDS</span>
+  </h1>
+  <p class="hero-sub">Kon Media is a full-service creative production company based in Southern California. We create video, photo, brand content, livestreams, podcasts, and strategy for companies that refuse to be boring.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Start a Project</a>
+    <a href="#services" class="btn-secondary">What We Do</a>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Video Production</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Brand Content</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Social Media</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Brand Strategy</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Photo Production</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Corporate Video</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Content Creation</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">SoCal Based</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Video Production</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Brand Content</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Social Media</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Brand Strategy</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Photo Production</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Corporate Video</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">Content Creation</span><span class="ticker-dot">✦</span>
+    <span class="ticker-item">SoCal Based</span><span class="ticker-dot">✦</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-label">// What We Do</div>
+  <h2 class="section-title">SERVICES<br><span style="color:var(--red)">BUILT</span> TO CONVERT</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-name">Video Production</div>
+      <p class="service-desc">Cinematic video content built for brands that want to stop the scroll and make people feel something. From concept to final cut.</p>
+      <div class="service-tags">
+        <span class="stag">Brand Films</span>
+        <span class="stag">Commercials</span>
+        <span class="stag">Interviews</span>
+        <span class="stag">Multi-Cam</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-name">Photo Production</div>
+      <p class="service-desc">High-impact photography for brands, products, and campaigns. Editorial-grade images that translate across every platform.</p>
+      <div class="service-tags">
+        <span class="stag">Brand Shoots</span>
+        <span class="stag">Product</span>
+        <span class="stag">Corporate</span>
+        <span class="stag">Lifestyle</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-name">Social Media Content</div>
+      <p class="service-desc">Platform-native content designed to perform. TikTok, Instagram, YouTube — we build content that fits the algorithm and your brand voice.</p>
+      <div class="service-tags">
+        <span class="stag">TikTok</span>
+        <span class="stag">Instagram</span>
+        <span class="stag">YouTube</span>
+        <span class="stag">Reels</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-name">Brand Strategy</div>
+      <p class="service-desc">Positioning, messaging, and visual identity work for brands that are ready to level up. We help you figure out who you are and how to say it.</p>
+      <div class="service-tags">
+        <span class="stag">Positioning</span>
+        <span class="stag">Messaging</span>
+        <span class="stag">Identity</span>
+        <span class="stag">Consulting</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-name">Livestreaming</div>
+      <p class="service-desc">Professional livestream production for corporate events, product launches, conferences, church services, and anything in between. We handle the tech so your audience never misses a moment.</p>
+      <div class="service-tags">
+        <span class="stag">Corporate Events</span>
+        <span class="stag">Product Launches</span>
+        <span class="stag">Conferences</span>
+        <span class="stag">Multi-Camera</span>
+        <span class="stag">Live Switching</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-name">Podcast Production</div>
+      <p class="service-desc">Full-service podcast production from recording to distribution. We handle audio, video, editing, branding, and publishing so you can focus on the conversation.</p>
+      <div class="service-tags">
+        <span class="stag">Audio & Video</span>
+        <span class="stag">Editing</span>
+        <span class="stag">Branding</span>
+        <span class="stag">Distribution</span>
+        <span class="stag">Short-form Clips</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left">
+    <span class="big-k">K</span>
+  </div>
+  <div class="about-right">
+    <div class="section-label">// Who We Are</div>
+    <h2 class="section-title">KING OF<br><span style="color:var(--red)">NONE.</span><br>MASTER OF<br>ALL.</h2>
+    <p class="about-body">
+      Kon Media was built on a simple idea — <strong>the best creative companies don't specialize in one thing, they specialize in results.</strong> We're a Southern California production company with the range to handle whatever your brand needs and the instincts to make it hit.
+    </p>
+    <p class="about-body">
+      From <strong>corporate interview series</strong> to <strong>viral social content</strong>, from <strong>brand identity work</strong> to <strong>live event production and livestreaming</strong> — we operate across disciplines because your audience doesn't care about categories. They care about what moves them.
+    </p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">SoCal</div>
+        <div class="stat-label">Based</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Core Services</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Possibilities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="section-label">// How It Works</div>
+  <h2 class="section-title">THE <span style="color:var(--red)">PROCESS</span></h2>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-arrow"></div>
+      <div class="step-num">01 — Discovery</div>
+      <div class="step-title">We Listen First</div>
+      <p class="step-desc">A quick call to understand your brand, your goals, and what you actually need. No assumptions, no templates.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-arrow"></div>
+      <div class="step-num">02 — Strategy</div>
+      <div class="step-title">We Build The Plan</div>
+      <p class="step-desc">Creative direction, deliverables, timeline, and pricing — all laid out clearly before we touch a camera.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-arrow"></div>
+      <div class="step-num">03 — Production</div>
+      <div class="step-title">We Execute</div>
+      <p class="step-desc">Shoot day. We bring the gear, the team, and the vision. You bring your brand. We handle everything else.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04 — Delivery</div>
+      <div class="step-title">We Deliver</div>
+      <p class="step-desc">Edited, polished, and ready to publish. Assets optimized for every platform you need.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left">
+    <div class="section-label">// Let's Work</div>
+    <h2 class="hero-title">START<br>YOUR<br><span class="red">PROJECT</span></h2>
+    <p style="margin-top:1.5rem">Tell us what you're working on. We'll get back to you within 24 hours with a game plan.</p>
+  </div>
+    <div class="contact-right">
+    <form class="contact-form" name="kon-media-contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="kon-media-contact">
+      <input type="hidden" name="bot-field" style="display:none">
+      <div class="form-row">
+        <div class="field"><label>First Name</label><input type="text" name="first-name" placeholder="First name"/></div>
+        <div class="field"><label>Last Name</label><input type="text" name="last-name" placeholder="Last name"/></div>
+      </div>
+      <div class="field"><label>Email</label><input type="email" name="email" placeholder="you@yourbrand.com"/></div>
+      <div class="field"><label>Company / Brand</label><input type="text" name="company" placeholder="Your brand name"/></div>
+      <div class="field">
+        <label>Service Interest</label>
+        <select name="service">
+          <option value="">Select a service...</option>
+          <option>Video Production</option>
+          <option>Photo Production</option>
+          <option>Social Media Content</option>
+          <option>Brand Strategy</option>
+          <option>Livestreaming</option>
+          <option>Podcast Production</option>
+          <option>Multiple Services</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Budget Range</label>
+        <select name="budget">
+          <option value="">Select a range...</option>
+          <option>Under $1,000</option>
+          <option>$1,000 – $3,000</option>
+          <option>$3,000 – $7,500</option>
+          <option>$7,500 – $15,000</option>
+          <option>$15,000+</option>
+        </select>
+      </div>
+      <div class="field"><label>Tell Us About Your Project</label><textarea rows="4" name="message" placeholder="What are you building? What do you need? The more detail the better."></textarea></div>
+      <button type="submit" class="submit-btn">Send It →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">KON<span>.</span>MEDIA</a>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Kon Media. Southern California.</div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = mouseX - 5 + 'px';
+  cursor.style.top = mouseY - 5 + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX - 18) * 0.12;
+  ringY += (mouseY - ringY - 18) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2.5)';
+    ring.style.transform = 'scale(1.4)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    ring.style.transform = 'scale(1)';
+  });
+});
+
+// Scroll animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.animation = 'fadeUp 0.7s ease both';
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.service-card, .process-step, .stat-item').forEach(el => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
